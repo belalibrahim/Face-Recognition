@@ -2,7 +2,7 @@ import os
 import cv2
 import numpy as np
 
-lbp_face = cv2.CascadeClassifier('opencv/data/lbpcascades/lbpcascade_frontalface.xml')
+# lbp_face = cv2.CascadeClassifier('opencv/data/lbpcascades/lbpcascade_frontalface.xml')
 haar_face = cv2.CascadeClassifier('opencv/data/haarcascades/haarcascade_frontalface_alt.xml')
 haar_eye = cv2.CascadeClassifier('opencv/data/haarcascades/haarcascade_eye.xml')
 # haar_smile = cv2.CascadeClassifier('opencv/data/haarcascades/haarcascade_smile.xml')
@@ -37,7 +37,7 @@ while cam.isOpened():
     _, frame = cam.read()
     frame = cv2.flip(frame, 1)
 
-    frame, face, face_area = detect_faces(lbp_face, frame)
+    frame, face, face_area = detect_faces(haar_face, frame)
 
     cv2.imshow('Camera', frame)
     if list(face):
