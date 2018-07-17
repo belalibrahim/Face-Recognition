@@ -3,6 +3,18 @@ from Utils import *
 
 cam = cv2.VideoCapture(0)
 
+print("Training data...")
+faces, labels = prepare_training_data()
+
+print("Total faces: ", len(faces))
+print("Total labels: ", len(labels))
+
+if len(faces) > 0:
+    face_recognizer = cv2.face.EigenFaceRecognizer_create()
+    face_recognizer.train(faces, np.array(labels))
+else:
+    print("There is no image to train.")
+
 while cam.isOpened():
 
     _, frame = cam.read()
@@ -17,12 +29,24 @@ while cam.isOpened():
         break
 
     elif k == ord('c'):
-        image_name = input("Enter the image name:\n")
-        save_training_data(face, image_name)
-        print("Image captured successfully!")
+        if face is not None:
+            image_name = input("Enter the image name:\n")
+            save_training_data(face, image_name)
+            print("Image captured successfully!")
+        else:
+            print("Unrecognized face!")
 
     elif k == ord('t'):
-        pass
+        faces, labels = prepare_training_data()
+        print("Total faces: ", len(faces))
+        print("Total labels: ", len(labels))
+        if len(faces) > 0:
+            print("Training data...")
+            face_recognizer = cv2.face.EigenFaceRecognizer_create()
+            face_recognizer.train(faces, np.array(labels))
+            print("Data trained successfully!")
+        else:
+            print("There is no image to train.")
 
     elif k == ord('p'):
         pass

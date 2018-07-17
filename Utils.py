@@ -7,6 +7,7 @@ haar_face = cv2.CascadeClassifier('opencv/data/haarcascades/haarcascade_frontalf
 haar_eye = cv2.CascadeClassifier('opencv/data/haarcascades/haarcascade_eye.xml')
 # haar_smile = cv2.CascadeClassifier('opencv/data/haarcascades/haarcascade_smile.xml')
 
+images_indexes = {}
 data_folder_path = "images"
 
 if not os.path.exists(data_folder_path):
@@ -15,16 +16,14 @@ if not os.path.exists(data_folder_path):
 
 def detect_faces(colored_img, f_cascade, scaleFactor=1.2):
     img_copy = np.copy(colored_img)
-    # convert the test image to gray image as opencv face detector expects gray images
+
     gray = cv2.cvtColor(img_copy, cv2.COLOR_BGR2GRAY)
 
-    # let's detect multiscale (some images may be closer to camera than others) images
     faces = f_cascade.detectMultiScale(gray, scaleFactor=scaleFactor, minNeighbors=5)
 
     if len(faces) == 0:
-        return img_copy, np.array([]), None
+        return img_copy, None, None
 
-    # go over list of faces and draw them as rectangles on original colored img
     for face in faces:
         draw_rectangle(img_copy, face)
 
@@ -35,6 +34,27 @@ def detect_faces(colored_img, f_cascade, scaleFactor=1.2):
 
 def save_training_data(img, image_name):
     cv2.imwrite(os.path.join(data_folder_path, image_name+".jpg"), cv2.resize(img, (300, 300)))
+
+
+def prepare_training_data():
+    subject_images_names = os.listdir(data_folder_path)
+
+    faces = []
+    images_indexes.clear()
+
+    for i, image_name in enumerate(subject_images_names):
+
+        if image_name.startswith("."):
+            continue
+
+        image_path = data_folder_path + "/" + image_name
+
+        image = cv2.imread(image_path)
+
+        faces.append(image)
+        images_indexes[i] = image_name
+
+    return faces, list(images_indexes.keys())
 
 
 def draw_rectangle(img, rect):
