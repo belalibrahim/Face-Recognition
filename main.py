@@ -22,6 +22,10 @@ while cam.isOpened():
 
     frame, face, face_area = detect_faces(frame, haar_face)
 
+    draw_text(frame, "Press 'c' to capture a new image", 20, 40)
+    draw_text(frame, "Press 't' to train the captured images", 20, 70)
+    draw_text(frame, "Press 'p' to predict a new image", 20, 100)
+
     cv2.imshow('Camera', frame)
 
     k = cv2.waitKey(10)
